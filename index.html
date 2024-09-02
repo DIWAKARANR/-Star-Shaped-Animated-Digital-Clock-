@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star-Shaped Clock</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: pink;
+    }
+
+    .clock {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      background-color: transparent;
+      border-radius: 50%;
+      box-shadow: 0 0 20px 5px rgba(0, 255, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .clock-face {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      clip-path: polygon(
+        50% 0%, 
+        61% 35%, 
+        98% 35%, 
+        68% 57%, 
+        79% 91%, 
+        50% 70%, 
+        21% 91%, 
+        32% 57%, 
+        2% 35%, 
+        39% 35%
+      );
+      background-color: purple;
+    }
+
+    .star {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 40px solid #00ff00;
+      transform: rotate(35deg);
+    }
+
+    .star:before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: -30px;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 40px solid #00ff00;
+      transform: rotate(-70deg);
+    }
+
+    .star:after {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: -10px;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 40px solid #00ff00;
+      transform: rotate(70deg);
+    }
+
+    .number {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      font-size: 24px;
+      color: yellow;
+      transform: translate(-50%, -50%);
+    }
+
+    .hand {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background-color: blue;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      transform-origin: bottom center;
+    }
+
+    .hour-hand {
+      width: 8px;
+      height: 100px;
+      margin-left: -4px;
+      margin-top: -100px;
+    }
+
+    .minute-hand {
+      width: 6px;
+      height: 120px;
+      margin-left: -3px;
+      margin-top: -120px;
+    }
+
+    .second-hand {
+      width: 4px;
+      height: 140px;
+      margin-left: -2px;
+      margin-top: -140px;
+      background-color: #ff0000;
+    }
+
+    .date-time {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: darkblue;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .location {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      color: red;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    /* Positioning numbers in a star shape */
+    .number:nth-child(1) { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(0deg) translateY(-150px); }
+    .number:nth-child(2) { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(72deg) translateY(-150px); }
+    .number:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(144deg) translateY(-150px); }
+    .number:nth-child(4) { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(216deg) translateY(-150px); }
+    .number:nth-child(5) { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(288deg) translateY(-150px); }
+  </style>
+</head>
+<body>
+  <div class="clock">
+    <div class="clock-face">
+      <!-- Star-shaped numbers -->
+      <div class="number" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(0deg);">
+        <div class="star"></div>
+      </div>
+      <div class="number" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(72deg);">
+        <div class="star"></div>
+      </div>
+      <div class="number" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(144deg);">
+        <div class="star"></div>
+      </div>
+      <div class="number" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(216deg);">
+        <div class="star"></div>
+      </div>
+      <div class="number" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(288deg);">
+        <div class="star"></div>
+      </div>
+      <div class="hand hour-hand"></div>
+      <div class="hand minute-hand"></div>
+      <div class="hand second-hand"></div>
+    </div>
+    <div class="date-time">
+      <span class="date"></span>
+      <span class="time"></span>
+    </div>
+    <div class="location">New York City, USA</div>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      const hourDegrees = (hours % 12) * 30 + (minutes / 60) * 30;
+      const minuteDegrees = (minutes * 6) + (seconds / 60) * 6;
+      const secondDegrees = seconds * 6;
+
+      document.querySelector('.hour-hand').style.transform = `rotate(${hourDegrees}deg)`;
+      document.querySelector('.minute-hand').style.transform = `rotate(${minuteDegrees}deg)`;
+      document.querySelector('.second-hand').style.transform = `rotate(${secondDegrees}deg)`;
+
+      const dateTimeElement = document.querySelector('.date-time');
+      dateTimeElement.innerHTML = `
+        <span class="date">${now.toLocaleDateString()}</span>
+        <span class="time">${now.toLocaleTimeString()}</span>
+      `;
+
+      // Play a sound every hour for 10 seconds
+      if (seconds === 0) {
+        const audio = new Audio('clock-chime.mp3');
+        audio.play();
+        audio.loop = true;
+        setTimeout(() => {
+          audio.pause();
+        }, 10000);
+      }
+    }
+
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+  </html>
+  
